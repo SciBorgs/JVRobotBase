@@ -4,10 +4,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveVisualizer {
     private double leftVoltageVolts;
     private double rightVoltageVolts;
+
+    private final Field2d simulatedField;
 
     private final DifferentialDrivetrainSim simulation = new DifferentialDrivetrainSim(
             DCMotor.getNEO(2), 7.29, 7.5,
@@ -17,6 +21,8 @@ public class DriveVisualizer {
     public DriveVisualizer() {
         leftVoltageVolts = 0;
         rightVoltageVolts = 0;
+
+        simulatedField = new Field2d();
     }
 
     public void setLeftInput(double inputVoltage) {
@@ -30,6 +36,9 @@ public class DriveVisualizer {
     public void update(double dtSeconds) {
         simulation.setInputs(leftVoltageVolts, rightVoltageVolts);
         simulation.update(dtSeconds);
+
+        simulatedField.setRobotPose(simulation.getPose());
+        SmartDashboard.putData(simulatedField);
     }
 
 }
